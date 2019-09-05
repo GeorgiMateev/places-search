@@ -103,7 +103,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-.idea
+
 
 /tourpedia-data-provider/data
 /tourpedia-data-provider/output
