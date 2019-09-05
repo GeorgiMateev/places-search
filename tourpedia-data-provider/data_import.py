@@ -35,14 +35,6 @@ def get_history(file_path):
 places_history = get_history(places_history_file_path)
 reviews_history = get_history(reviews_history_file_path)
 
-places_history_writer = open(places_history_file_path, 'w+')
-reviews_history_writer = open(reviews_history_file_path, 'w+')
-
-places_details_writer = open(places_details_file_path, 'w+')
-places_details_reviews_writer = open(places_details_reviews_file_path, 'w+')
-reviews_writer = open(reviews_file_path, 'w+')
-
-
 def retry_get_url(url):
     retry_count = 3
     success = False
@@ -128,4 +120,18 @@ def start_import_data():
 
 
 if __name__ == '__main__':
-    start_import_data()
+    places_history_writer = open(places_history_file_path, 'w+')
+    reviews_history_writer = open(reviews_history_file_path, 'w+')
+
+    places_details_writer = open(places_details_file_path, 'w+')
+    places_details_reviews_writer = open(places_details_reviews_file_path, 'w+')
+    reviews_writer = open(reviews_file_path, 'w+')
+
+    try:
+        start_import_data()
+    except:
+        places_history_writer.close()
+        reviews_history_writer.close()
+        places_details_writer.close()
+        places_details_reviews_writer.close()
+        reviews_writer.close()
