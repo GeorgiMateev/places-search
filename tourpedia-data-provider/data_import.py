@@ -35,6 +35,7 @@ def get_history(file_path):
 places_history = get_history(places_history_file_path)
 reviews_history = get_history(reviews_history_file_path)
 
+
 def retry_get_url(url):
     retry_count = 3
     success = False
@@ -45,7 +46,7 @@ def retry_get_url(url):
         success = res.status_code == 200
 
         # Always sleep in order not to spam the server
-        time.sleep(0.2)
+        time.sleep(0.1)
 
     if not success:
         raise Exception(f'Unable to get url {url}')
@@ -67,7 +68,7 @@ def extract_details_url(text):
 
 
 def import_for_file(target_file):
-    with open(target_file, 'r') as target_data:
+    with open(target_file, 'r', encoding='utf-8') as target_data:
         lines_reader = target_data.readlines()
 
         line_count = 0
@@ -96,7 +97,7 @@ def import_for_file(target_file):
 
                     dump_jsonl(place_details_json, places_details_reviews_writer)
 
-                    places_history_writer.writelines([place_id])
+                    places_history_writer.write(f'{place_id}\n')
 
             line_count += 1
 
@@ -109,7 +110,7 @@ def dump_reviews(reviews_ids):
 
         if review_id not in reviews_history:
             dump_jsonl(review, reviews_writer)
-            reviews_history_writer.writelines([review_id])
+            reviews_history_writer.write(f'{review_id}\n')
 
     return reviews
 
@@ -120,12 +121,12 @@ def start_import_data():
 
 
 if __name__ == '__main__':
-    places_history_writer = open(places_history_file_path, 'w+')
-    reviews_history_writer = open(reviews_history_file_path, 'w+')
+    places_history_writer = open(places_history_file_path, 'a', 1)
+    reviews_history_writer = open(reviews_history_file_path, 'a', 1)
 
-    places_details_writer = open(places_details_file_path, 'w+')
-    places_details_reviews_writer = open(places_details_reviews_file_path, 'w+')
-    reviews_writer = open(reviews_file_path, 'w+')
+    places_details_writer = open(places_details_file_path, 'a', 1)
+    places_details_reviews_writer = open(places_details_reviews_file_path, 'a', 1)
+    reviews_writer = open(reviews_file_path, 'a', 1)
 
     try:
         start_import_data()
