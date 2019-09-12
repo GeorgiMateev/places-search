@@ -4,7 +4,9 @@ import re
 import errno
 
 import csv
+import sys
 import time
+import traceback
 
 import requests
 
@@ -62,6 +64,10 @@ def dump_jsonl(data, writer):
 def extract_details_url(text):
     url_pattern = '(?P<url>http://tour-pedia.org/api/getPlaceDetails\\?id=(?P<id>\d+))'
     res = re.search(url_pattern, text)
+
+    if res is None:
+        return None, None
+
     url = res.group('url')
     pid = res.group('id')
     return url, pid
@@ -77,6 +83,9 @@ def import_for_file(target_file):
                 print(f'Column names are {", ".join(row)}')
             else:
                 details_url, place_id = extract_details_url(row)
+
+                if details_url is None:
+                    continue
 
                 if place_id in places_history:
                     continue
@@ -130,7 +139,8 @@ if __name__ == '__main__':
 
     try:
         start_import_data()
-    except:
+    except Exception as err:
+        traceback.print_exc(file=sys.stdout)
         places_history_writer.close()
         reviews_history_writer.close()
         places_details_writer.close()
