@@ -43,9 +43,17 @@ def retry_get_url(url):
     success = False
 
     while retry_count > 0 and not success:
-        res = requests.get(url)
+        try:
+            res = requests.get(url)
+            success = res.status_code == 200
+
+            if not success:
+                print(f'Get error on url: {url}  status code: {res.status_code}')
+        except Exception as err:
+            success = False
+            print(f'{err} on url: {url}')
+
         retry_count -= 1
-        success = res.status_code == 200
 
         # Always sleep in order not to spam the server
         time.sleep(0.1)
